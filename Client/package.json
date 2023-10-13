@@ -1,0 +1,45 @@
+{
+  "name": "livevoting",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore",
+    "format": "prettier --write src/"
+  },
+  "dependencies": {
+    "aos": "^2.3.4",
+    "apexcharts": "^3.43.0",
+    "axios": "^1.5.1",
+    "chart.js": "^4.4.0",
+    "date-fns": "^2.30.0",
+    "epic-spinners": "^2.0.0",
+    "flowbite": "^1.8.1",
+    "flowbite-vue": "^0.0.17-next.10",
+    "oh-vue-icons": "^1.0.0-rc3",
+    "socket.io-client": "^4.7.2",
+    "swiper": "^10.3.1",
+    "vue": "^3.3.4",
+    "vue-chartjs": "^5.2.0",
+    "vue-multiselect": "^2.1.7",
+    "vue-router": "^4.2.4",
+    "vue-socket.io": "^3.0.10",
+    "vue-toastification": "^2.0.0-rc.5",
+    "vue3-toastify": "^0.1.13",
+    "vuex": "^4.1.0"
+  },
+  "devDependencies": {
+    "@rushstack/eslint-patch": "^1.3.3",
+    "@vitejs/plugin-vue": "^4.3.4",
+    "@vue/eslint-config-prettier": "^8.0.0",
+    "autoprefixer": "^10.4.16",
+    "eslint": "^8.49.0",
+    "eslint-plugin-vue": "^9.17.0",
+    "postcss": "^8.4.30",
+    "prettier": "^3.0.3",
+    "tailwindcss": "^3.3.3",
+    "vite": "^4.4.9"
+  }
+}

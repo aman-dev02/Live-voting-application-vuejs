@@ -20,6 +20,8 @@ module.exports = {
         primary: ['Space Grotesk', 'sans-serif'], 
         secondary: [ 'Inter', 'sans-serif'], 
         third: [ 'Roboto', 'sans-serif'], 
+        fourth:['IBM Plex Mono', 'monospace']
+
      
   
       },
