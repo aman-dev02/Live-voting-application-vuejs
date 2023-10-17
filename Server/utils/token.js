@@ -4,7 +4,7 @@ require("dotenv").config();
 
 const secretKey = 'abd%6sdfkj';
 const createAccessToken = (payload) => {
-  return jwt.sign(payload, secretKey, {expiresIn : "1h"});  
+  return jwt.sign(payload, secretKey, {expiresIn : "1d"});  
 }
 
 module.exports = {

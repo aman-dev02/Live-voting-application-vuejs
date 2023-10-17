@@ -84,6 +84,23 @@ export const actions = {
       console.error('Error fetching my polls:', error);
       throw error;
     }
-  }
-  
+  },
+
+  async updatePollStatusAction({ commit }, { pollId, isOpen }) {
+    try {
+      const response = await axiosInstance.patch(`api/polls/update-poll-status/${pollId}`, { isOpen });
+      console.log(response)
+      if (response.data.message) {
+        return response.data;
+      } else if (response.data.error) {
+        return { success: false, message: response.data.error };
+      }
+    } catch (error) {
+      console.error('Error updating poll status:', error);
+      return { success: false, message: 'An error occurred while updating poll status' };
+    
+    }
+  },
 }
+
+  

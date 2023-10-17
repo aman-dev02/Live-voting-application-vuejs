@@ -55,10 +55,11 @@ const recordVote = async (req, res) => {
 };
 
 
-
 const getOpenPolls = async (req, res) => {
   try {
-    const openPolls = await Poll.find({ isOpen: true });
+    const userId = req.user.id;
+
+    const openPolls = await Poll.find({ 'createdBy.id': { $ne: userId } });
 
     res.status(200).json(openPolls);
   } catch (error) {
@@ -66,6 +67,8 @@ const getOpenPolls = async (req, res) => {
     res.status(500).json({ message: "Error fetching open polls" });
   }
 };
+
+
 const mypolls= async (req, res) => {
   try {
 
@@ -79,9 +82,31 @@ const mypolls= async (req, res) => {
     res.status(500).json({ message: 'Error fetching user polls' });
   }
 };
+
+const updatePoll= async (req, res) => {
+  const { pollId } = req.params;
+  const { isOpen } = req.body;
+
+  try {
+    
+    const poll = await Poll.findById(pollId);
+    if (poll) {
+      poll.isOpen = isOpen;
+      await poll.save();
+      res.json({ message: 'Poll status updated successfully.' });
+    } else {
+      res.status(404).json({ error: 'Poll not found.' });
+    }
+  } catch (error) {
+    console.error('Error updating poll status:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+
 module.exports = {
   createPoll,
   recordVote,
   getOpenPolls,
-  mypolls
+  mypolls,
+  updatePoll
 };

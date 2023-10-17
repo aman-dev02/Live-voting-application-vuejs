@@ -1,17 +1,28 @@
 <template>
   <div class=" bg-image container min-h-[90vh] min-w-full">
-    <div v-for="poll in openPolls" :key="poll._id" class="poll-card font-secondary">
+    <div  class="filter-dropdown min-w-[70vw] px-4 py-1 rounded mt-2 flex justify-end items-center bg-transparent gap-4 font-secondary ">
+      <label for="poll-filter" class="">Sort by:</label>
+      <select
+      id="poll-filter"
+      v-model="filter"
+      class="block   bg-white border border-gray-300 rounded-md shadow-md focus:ring focus:ring-Primary focus:outline-none"
+    >
+      <option value="live" >Live Polls</option>
+      <option value="expired">Expired Polls</option>
+    </select>
+    </div>
+    <div v-for="poll in filteredPolls" :key="poll._id" class="poll-card font-secondary">
       <div class="poll-header">
         <h2 class="poll-title font-primary">{{ poll.title }}?</h2>
         <div class="flex justify-center items-center gap-2">
-          <p>Valid till: </p><CountdownTimer :closesAt="new Date(poll.closesAt)" /></div>
+          <p>Valid till: </p><CountdownTimer :closesAt="new Date(poll.closesAt)"  :pollId="poll._id"  /></div>
       </div>
       <div class="poll-options font-third">
         <div
           v-for="(option, index) in poll.options"
           :key="index"
           @click="vote(poll, index)"
-          :class="{ 'selected': selectedOption[poll._id] === index, 'disabled': poll.isClosed }"
+          :class="{ 'selected': selectedOption[poll._id] === index, 'disabled': !poll.isOpen }"
           class="option hover:font-primary"
         >
           {{ index + 1 }}. {{ option.text }}
@@ -27,11 +38,11 @@
 
 <script setup>
 import { toast } from 'vue3-toastify';
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed} from 'vue';
 import { useStore } from 'vuex';
 import CountdownTimer from '../components/countdownTimer.vue'
 const store = useStore();
-
+const filter = ref('live');
 const openPolls = ref([]);
 const selectedOption = ref({}); 
 
@@ -71,7 +82,14 @@ const formatDateTime = (timestamp) => {
   const date = new Date(timestamp);
   return date.toLocaleString();
 };
-
+const filteredPolls = computed(() => {
+  if (filter.value === 'live') {
+    return openPolls.value.filter((poll) => poll.isOpen);
+  } else if (filter.value === 'expired') {
+    return openPolls.value.filter((poll) => !poll.isOpen);
+  }
+  return openPolls.value; // Default to showing all if filter is not 'live' or 'expired'
+});
 onMounted(() => {
   fetchOpenPolls();
   
@@ -91,6 +109,7 @@ onMounted(() => {
   justify-content: center;
   align-items: center;
 }
+
 .poll-card {
   width: 70%;
   margin-top: 20px;

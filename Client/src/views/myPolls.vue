@@ -22,12 +22,15 @@
           <p class="text-sm">Created At: {{ formatDateTime(selectedPoll.createdAt) }}</p>
           <p class="text-sm">Is Public: {{ selectedPoll.isPublic ? 'Yes' : 'No' }}</p>
           <p class="text-sm">Duration: {{ selectedPoll.timer.value }} {{ selectedPoll.timer.unit }}</p>
-          <p class="text-sm">Status: {{ selectedPoll.isOpen ? 'Open' : 'Closed' }}</p>
+          <p class="text-sm " >
+            Status: <span :style="{ color: selectedPoll.isOpen ? '#05ac1e' : '#FF0000' } " class="bg-white w-fit p-1 rounded ">{{ selectedPoll.isOpen ? 'Open' : 'Closed' }}</span>
+          </p>
+          
           <!-- Options and Votes -->
           <div class="mt-4">
             <h3 class="text-lg font-bold mb-2 font-primary">Options and Votes</h3>
             <ul>
-              <li v-for="option in selectedPoll.options" :key="option._id">
+              <li v-for="option in selectedPoll.options" :key="option._id" >
                 <p class="text-base font-semibold">{{ option.text }}</p>
                 <p class="text-sm">Votes: {{ option.votes }}</p>
               </li>
@@ -52,7 +55,7 @@
 </template>
 <script>
 import { useStore } from 'vuex';
-import { ref, onMounted } from 'vue';
+import { ref, onMounted,watch } from 'vue';
 import Chart from 'chart.js/auto';
 
 export default {
@@ -108,6 +111,16 @@ export default {
       }
     },
   },
+  updateChartOnSelectedPollChange() {
+      watch(
+        () => this.selectedPoll,
+        () => {
+          if (this.selectedPoll) {
+            this.updateChartData();
+          }
+        }
+      );
+    },
   
   async created() {
     const store = useStore();
@@ -117,6 +130,7 @@ export default {
   
   mounted() {
     onMounted(() => {
+      this.updateChartOnSelectedPollChange();
       if (this.selectedPoll) {
         this.updateChartData();
       }

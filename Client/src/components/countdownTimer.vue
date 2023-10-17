@@ -5,17 +5,40 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from 'vue';
+import { ref, onMounted, watch, computed } from 'vue';
+import { useStore } from 'vuex'; // Import your store
+
 
 const props = defineProps({
   closesAt: Date,
+  pollId: String, // Add a prop for pollId
 });
+
+const store = useStore(); // Access the Vuex store
 
 const endTime = ref(null);
 const displayTime = ref('00:00:00');
 const isExpired = ref(false);
 
-console.log(endTime);
+const remainingTime = computed(() => {
+  if (endTime.value) {
+    return endTime.value - new Date();
+  }
+  return 0;
+});
+
+watch(remainingTime, (newRemainingTime) => {
+  if (newRemainingTime <= 0) {
+    isExpired.value = true;
+    // Call the action method to update the poll's isOpen status
+    if (props.pollId) {
+      store.dispatch('updatePollStatusAction', {
+        pollId: props.pollId,
+        isOpen: false,
+      });
+    }
+  }
+});
 
 const updateFormattedTime = () => {
   if (endTime.value) {
@@ -65,7 +88,6 @@ updateFormattedTime();
   border-radius: 4px;
   font-weight: bold;
 }
-
 
 .expired {
   background-color: #e02424;
