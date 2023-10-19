@@ -41,6 +41,7 @@ import { toast } from 'vue3-toastify';
 import { ref, onMounted, computed} from 'vue';
 import { useStore } from 'vuex';
 import CountdownTimer from '../components/countdownTimer.vue'
+
 const store = useStore();
 const filter = ref('live');
 const openPolls = ref([]);
@@ -93,7 +94,7 @@ const filteredPolls = computed(() => {
 onMounted(() => {
   fetchOpenPolls();
   
-
+//  socket.emit('message', 'Hello from Vue!')
 });
 </script>
 

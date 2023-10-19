@@ -6,7 +6,7 @@
 
 <script setup>
 import { ref, onMounted, watch, computed } from 'vue';
-import { useStore } from 'vuex'; // Import your store
+import { useStore } from 'vuex'; 
 
 
 const props = defineProps({
@@ -14,7 +14,7 @@ const props = defineProps({
   pollId: String, // Add a prop for pollId
 });
 
-const store = useStore(); // Access the Vuex store
+const store = useStore(); 
 
 const endTime = ref(null);
 const displayTime = ref('00:00:00');
@@ -30,7 +30,6 @@ const remainingTime = computed(() => {
 watch(remainingTime, (newRemainingTime) => {
   if (newRemainingTime <= 0) {
     isExpired.value = true;
-    // Call the action method to update the poll's isOpen status
     if (props.pollId) {
       store.dispatch('updatePollStatusAction', {
         pollId: props.pollId,

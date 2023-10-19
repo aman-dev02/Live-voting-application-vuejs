@@ -52,7 +52,13 @@
             Dashboard
           </button>
         </router-link>
-
+        <router-link to="/dashboard">
+          <button
+            class="flex items-center text-sm text-white focus:outline-none bg-primary rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary focus:z-10 focus:ring-4 focus:ring-gray-200 px-3 py-2 font-secondary"
+          >
+           View History
+          </button>
+        </router-link>
         <router-link to="/mypolls">
           <button
             class="flex items-center text-sm text-white focus:outline-none bg-primary rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary focus:z-10 focus:ring-4 focus:ring-gray-200 px-3 py-2 font-secondary"
@@ -87,7 +93,13 @@
           Dashboard
         </button>
       </router-link>
-
+      <router-link to="/dashboard">
+        <button
+          class="flex mt-4 items-center  text-sm text-gray-900 focus:outline-none bg-gray-200 rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary focus:z-10 focus:ring-4 focus:ring-gray-200 px-3 py-2 font-secondary mb-2"
+        >
+          History
+        </button>
+      </router-link>
       <!-- My Polls button with icon -->
       <router-link to="/mypolls">
         <button

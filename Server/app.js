@@ -45,7 +45,9 @@ io.on("connection", (socket) => {
   socket.on('newPollNotification', (data) => {
     io.emit('newPollNotification', data); 
   });
-
+  socket.on('message', (data) => {
+    console.log('Received message from server:', data)
+  })
 });
 
 const mongoUrl = "mongodb://0.0.0.0:27017/livevoting";
