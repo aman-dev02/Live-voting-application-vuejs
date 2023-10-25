@@ -44,9 +44,10 @@ io.on("connection", (socket) => {
   });
   socket.on('newPollNotification', (data) => {
     io.emit('newPollNotification', data); 
+    console.log("new poll created",data)
   });
-  socket.on('message', (data) => {
-    console.log('Received message from server:', data)
+  socket.on('Vote', (data) => {
+    console.log('Vote received by:', data.username)
   })
 });
 

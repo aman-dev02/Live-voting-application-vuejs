@@ -8,15 +8,14 @@ import AOS from 'aos'
 import 'aos/dist/aos.css'
 import store from './store/store.js'
 import axios from 'axios'
-import { io } from 'socket.io-client'
+// import { io } from 'socket.io-client'
+import { socket } from './socket'
 import Vue3Toasity from 'vue3-toastify'
 import 'vue3-toastify/dist/index.css'
 import { showSuccessToast, showErrorToast } from './toastService.js';
 axios.defaults.baseURL = 'http://localhost:8080'
- const socket = io('http://localhost:8080')
+// const socket = io('http://localhost:8080')
 
-
-// Create the Vue app and set up Socket.IO
 const Fa = Object.values({ ...FaIcons })
 const appInstance = createApp(App)
 appInstance.use(router)
@@ -31,18 +30,18 @@ appInstance.use(Vue3Toasity, {
 // $socket instance
 // appInstance.provide('$socket', socket);
 
-// appInstance.config.globalProperties.$socket = socket;
+// // appInstance.config.globalProperties.$socket = socket;
 appInstance.use(socket);
 appInstance.config.globalProperties.$showSuccessToast = showSuccessToast;
 appInstance.config.globalProperties.$showErrorToast = showErrorToast;
 
-socket.on('connect', () => {
-  console.log('Connected to Socket.IO server')
-})
+// socket.on('connect', () => {
+//   console.log('Connected to Socket.IO server')
+// })
 
-socket.on('disconnect', () => {
-  console.log('Disconnected from Socket.IO server')
-})
-export {socket}
+// socket.on('disconnect', () => {
+//   console.log('Disconnected from Socket.IO server')
+// })
+// export {socket}
 appInstance.mount('#app')
 // export default socket;

@@ -124,13 +124,13 @@ import { ref } from 'vue'
 import { useStore } from 'vuex'
 import { toast } from 'vue3-toastify'
 import { useRouter } from 'vue-router'
- import {socket} from '../main'
+import { socket } from '../socket'
 export default {
   setup() {
     const router = useRouter()
     const store = useStore()
     const user = store.state.user
- 
+
     const poll = ref({
       title: '',
       timer: { value: 0, unit: 'minutes' },
@@ -153,11 +153,19 @@ export default {
     }
 
     const createPoll = async () => {
-      console.log(poll.value)
       const response = await store.dispatch('createPollAction', poll.value)
 
       if (response) {
         // Poll created successfully
+
+        toast.success('Poll created !', {
+          position: toast.POSITION.TOP_CENTER
+        })
+
+        socket.emit('newPollNotification', {
+          username: user.username,
+          pollTitle: poll.value.title
+        })
         poll.value = {
           title: '',
           timer: { value: 0, unit: 'minutes' },
@@ -168,15 +176,6 @@ export default {
             username: ''
           }
         }
-        toast.success('Poll created !', {
-          position: toast.POSITION.TOP_CENTER
-        })
-       
-
-        socket.emit('newPollNotification', {
-          username: user.username,
-          pollTitle: poll.value.title
-        })
         router.push('/dashboard')
       } else {
         console.error('Poll creation failed:', response.error)

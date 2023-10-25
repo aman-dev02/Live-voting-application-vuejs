@@ -2,7 +2,7 @@
   <div class="bg-image container min-h-[90vh] min-w-full p-6 font-secondary">
     <div class="flex flex-wrap md:flex-row min-w-full">
       <!-- Left Section: List of Polls -->
-      <div class="left-section w-1/2 min-w-1/2 p-4 justify-center  ">
+      <div class="left-section w-1/2 min-w-1/2 p-4 justify-center">
         <h2 class="text-xl font-bold mb-4 font-primary">List of Polls</h2>
         <div
           v-for="poll in myPolls"
@@ -18,31 +18,43 @@
       <div class="right-section w-full md:w-1/2 p-4">
         <h2 class="text-xl font-bold mb-4 font-primary">Poll Detail</h2>
         <div v-if="selectedPoll">
-          <h2 class="text-xl font-bold mb-2 font-primary text-primary bg-white w-fit p-1 rounded">{{ selectedPoll.title }}?</h2>
+          <h2 class="text-xl font-bold mb-2 font-primary text-primary bg-white w-fit p-1 rounded">
+            {{ selectedPoll.title }}?
+          </h2>
           <p class="text-sm">Created At: {{ formatDateTime(selectedPoll.createdAt) }}</p>
           <p class="text-sm">Is Public: {{ selectedPoll.isPublic ? 'Yes' : 'No' }}</p>
-          <p class="text-sm">Duration: {{ selectedPoll.timer.value }} {{ selectedPoll.timer.unit }}</p>
-          <p class="text-sm " >
-            Status: <span :style="{ color: selectedPoll.isOpen ? '#05ac1e' : '#FF0000' } " class="bg-white w-fit p-1 rounded ">{{ selectedPoll.isOpen ? 'Open' : 'Closed' }}</span>
+          <p class="text-sm">
+            Duration: {{ selectedPoll.timer.value }} {{ selectedPoll.timer.unit }}
           </p>
-          
-          <!-- Options and Votes -->
+          <p class="text-sm">
+            Status:
+            <span
+              :style="{ color: selectedPoll.isOpen ? '#05ac1e' : '#FF0000' }"
+              class="bg-white w-fit p-1 rounded"
+              >{{ selectedPoll.isOpen ? 'Open' : 'Closed' }}</span
+            >
+          </p>
+
           <div class="mt-4">
             <h3 class="text-lg font-bold mb-2 font-primary">Options and Votes</h3>
-            <ul>
-              <li v-for="option in selectedPoll.options" :key="option._id" >
-                <p class="text-base font-semibold">{{ option.text }}</p>
-                <p class="text-sm">Votes: {{ option.votes }}</p>
+            <ul >
+              <li v-for="option in selectedPoll.options" :key="option._id" class="my-10">
+                <div class="flex  flex-col ">
+                  <p class="text-base font-semibold">{{ option.text }}</p>
+                  <div class="progress-bar">
+                    <div
+                      :style="{ width: option.votePercentage + '%' }"
+                      class="progress-bar-fill"
+                    ></div>
+                    <p class="progress-bar-text">{{ option.votePercentage }}%</p>
+                  </div>
+                </div>
               </li>
             </ul>
           </div>
           <div class="mt-4" v-if="selectedPoll.options.length > 0">
             <h3 class="text-lg font-bold mb-2 font-primary">Total Votes</h3>
             <p class="text-sm">{{ totalVotes(selectedPoll.options) }}</p>
-          </div>
-          <!-- Bar Chart -->
-          <div class="mt-4">
-            <canvas ref="barChart"></canvas>
           </div>
         </div>
 
@@ -53,91 +65,69 @@
     </div>
   </div>
 </template>
+
 <script>
-import { useStore } from 'vuex';
-import { ref, onMounted,watch } from 'vue';
-import Chart from 'chart.js/auto';
+import { useStore } from 'vuex'
+import { onMounted } from 'vue'
 
 export default {
   data() {
     return {
       myPolls: [],
       selectedPoll: null,
-      chartInstance: null, // Store chart instance
-    };
+      
+    }
   },
-  
+
   methods: {
     formatDateTime(timestamp) {
-      const date = new Date(timestamp);
-      return date.toLocaleString();
+      const date = new Date(timestamp)
+      return date.toLocaleString()
     },
     selectPoll(poll) {
-      this.selectedPoll = poll;
-      this.updateChartData();
+      this.selectedPoll = poll
+      this.updateChartData()
     },
     totalVotes(options) {
-      if (options.length === 0) return 'No votes recorded.';
-      const total = options.reduce((sum, option) => sum + option.votes, 0);
-      return `Total Votes: ${total}`;
+      if (options.length === 0) return 'No votes recorded.'
+      const total = options.reduce((sum, option) => sum + option.votes, 0)
+      return `Total Votes: ${total}`
     },
     updateChartData() {
       if (this.selectedPoll) {
-        const labels = this.selectedPoll.options.map((option) => option.text);
-        const data = this.selectedPoll.options.map((option) => option.votes);
-
-        if (this.chartInstance) {
-          this.chartInstance.destroy(); 
-        }
-
-        const ctx = this.$refs.barChart.getContext('2d');
-        this.chartInstance = new Chart(ctx, {
-          type: 'bar',
-          data: {
-            labels,
-            datasets: [{
-              label: 'Votes',
-              data,
-              backgroundColor: 'rgba(75, 192, 192, 0.2)',
-              borderColor: 'rgba(75, 192, 192, 1)',
-              borderWidth: 1,
-            }],
-          },
-          options: {
-            responsive: true,
-            maintainAspectRatio: false,
-          },
-        });
+        this.calculateVotePercentages()
       }
     },
-  },
-  updateChartOnSelectedPollChange() {
-      watch(
-        () => this.selectedPoll,
-        () => {
-          if (this.selectedPoll) {
-            this.updateChartData();
-          }
+    calculateVotePercentages() {
+      if (this.selectedPoll && this.selectedPoll.options.length > 0) {
+        const totalVotes = this.selectedPoll.options.reduce((sum, option) => sum + option.votes, 0)
+        for (const option of this.selectedPoll.options) {
+          option.votePercentage = ((option.votes / totalVotes) * 100).toFixed(2)
         }
-      );
-    },
-  
-  async created() {
-    const store = useStore();
-    const polls = await store.dispatch('getMyPollsAction');
-    this.myPolls = polls;
+      }
+    }
   },
-  
+
+  watch: {
+    selectedPoll: 'updateChartData'
+  },
+
+  async created() {
+    const store = useStore()
+    const polls = await store.dispatch('getMyPollsAction')
+    this.myPolls = polls
+  },
+
   mounted() {
     onMounted(() => {
-      this.updateChartOnSelectedPollChange();
       if (this.selectedPoll) {
-        this.updateChartData();
+        this.updateChartData()
       }
-    });
-  },
-};
+    })
+  }
+}
 </script>
+
 <style scoped>
 .bg-image {
   background: rgb(245, 245, 245);
@@ -171,5 +161,22 @@ export default {
 
 .left-section div:hover {
   background-color: #e3e3e3;
+}
+.progress-bar {
+  width: 100%;
+  background-color: #f0f0f0;
+  height: 20px;
+  border-radius: 4px;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  border-radius: 4px;
+  background-color: #3f72af;
+  transition: width 0.3s;
+}
+
+.progress-bar-text {
+  margin-left: 5px;
 }
 </style>
