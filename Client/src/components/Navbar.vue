@@ -52,13 +52,7 @@
             Dashboard
           </button>
         </router-link>
-        <router-link to="/dashboard">
-          <button
-            class="flex items-center text-sm text-white focus:outline-none bg-primary rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary focus:z-10 focus:ring-4 focus:ring-gray-200 px-3 py-2 font-secondary"
-          >
-           View History
-          </button>
-        </router-link>
+     
         <router-link to="/mypolls">
           <button
             class="flex items-center text-sm text-white focus:outline-none bg-primary rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary focus:z-10 focus:ring-4 focus:ring-gray-200 px-3 py-2 font-secondary"
@@ -73,6 +67,17 @@
           Create Poll
         </button>
       </router-link>
+       
+          <button
+          @click="showNotif"
+          
+            class="flex items-center text-sm text-white focus:outline-none bg-primary rounded-lg border border-gray-200  hover:text-primary focus:z-10 focus:ring-4 focus:ring-gray-200 px-2 py-2 font-secondary"
+          
+            >
+          <v-icon name="fa-bell" scale="1" fill="#fff" animation="ring" hover />
+          
+          </button>
+       
         <router-link to="/">
           <button
             class="flex items-center text-white text-sm bg-red-600 hover:bg-red-700 px-3 py-2 rounded-lg focus:outline-none font-secondary"
@@ -115,6 +120,16 @@
         Create Poll
       </button>
     </router-link>
+   
+    <button
+    @click="showNotif"
+    class="flex items-center text-sm text-white focus:outline-none bg-primary rounded-lg border border-gray-200  hover:text-primary focus:z-10 focus:ring-4 focus:ring-gray-200 px-2 py-2 font-secondary"
+ 
+    >
+  <v-icon name="fa-bell" scale="1" fill="#fff" animation="ring" hover />
+      
+      </button>
+  
       <router-link to="/">
         <button
           class="flex items-center text-white text-sm bg-red-600 hover:bg-red-700 px-3 py-2 rounded-lg focus:outline-none font-secondary"
@@ -124,6 +139,7 @@
         </button>
       </router-link>
     </div>
+    <notification :isVisible="showNoti" /> 
   </nav>
 </template>
 
@@ -132,9 +148,10 @@ import { ref,computed } from 'vue'
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
 import { toast } from 'vue3-toastify';
+import notification from './notification.vue';
 const store = useStore();
 const router = useRouter();
-
+const showNoti = ref(false)
 // Check if the user is logged in
 const isLoggedin = computed(() => {
   return store.getters.isLoggedIn;
@@ -160,6 +177,11 @@ const logout = async () => {
         })
     console.error('An error occurred during signup:', error);
   }
+
+
+};
+const showNotif = () => {
+  showNoti.value = !showNoti.value; 
 };
 </script>
 
