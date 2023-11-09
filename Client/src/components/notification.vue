@@ -1,7 +1,7 @@
 <template>
     <div class="notiBox overflow-y-auto" v-if="isVisible" data-aos="zoom-in" >
       <ul class="notification-list font-secondary ">
-        <li v-for="(message, index) in notification" :key="index" class="notification-item hover:font-primary hover:bg-primary hover:text-white cursor-pointer" >
+        <li v-for="(message, index) in filteredNotifications" :key="index" class="notification-item hover:font-primary hover:bg-primary hover:text-white cursor-pointer" >
           {{ message }}
         </li>
       </ul>
@@ -10,27 +10,29 @@
   
   
   <script setup>
-const notification=[
-    "Ajinkya voted to your poll",
-    "Rahul voted to your poll",
-    "Sarvesh voted to your poll",
-    "Savan voted to your poll",
-    "Tanmay voted to your poll",
-    "Aman voted to your poll",
-    "Rahul voted to your poll",
-    "Tanmay voted to your poll",
-    "Aman voted to your poll",
-    "Tanmay voted to your poll",
-    "Savan voted to your poll",
-    "Rahul voted to your poll",
-    "Aman voted to your poll",
-]
+import { socket } from '../socket';
+import { ref,computed } from 'vue';
+import { useStore } from 'vuex'
+const notifications = ref([]);
+const store =useStore();
+const props = defineProps({
+  isVisible: Boolean,
+});
 
+const user = store.state.user
+socket.on('Vote', (data) => {
+  if (data.username !== user.username) { 
+    const newNotification = `${data.username} voted to your poll`;
+    notifications.value.push(newNotification);
+  }
+});
 
-  const props = defineProps({
-    isVisible: Boolean,
+const filteredNotifications = computed(() => {
+  return notifications.value.filter(message => {
+    return !message.includes(store.state.user.username); 
   });
-  </script>
+});
+</script>
   
   <style scoped>
   ::-webkit-scrollbar{

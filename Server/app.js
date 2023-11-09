@@ -48,7 +48,8 @@ io.on("connection", (socket) => {
   });
   socket.on('Vote', (data) => {
     console.log('Vote received by:', data.username)
-  })
+    io.emit('Vote', data); 
+  })  
 });
 
 const mongoUrl = "mongodb://0.0.0.0:27017/livevoting";

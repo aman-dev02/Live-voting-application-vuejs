@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
-const User = require('./User.js');
+const mongoose = require("mongoose");
+const User = require("./User.js");
 
 const pollSchema = new mongoose.Schema({
   title: {
@@ -13,8 +13,8 @@ const pollSchema = new mongoose.Schema({
     },
     unit: {
       type: String,
-      enum: ['minutes', 'hours', 'days'],
-      default: 'minutes',
+      enum: ["minutes", "hours", "days"],
+      default: "minutes",
     },
   },
   isPublic: {
@@ -32,16 +32,15 @@ const pollSchema = new mongoose.Schema({
         required: true,
       },
       votes: {
-        type: Number,  
-        default: 0,    
+        type: Number,
+        default: 0,
       },
-      
     },
   ],
   createdBy: {
     id: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
+      ref: "User",
     },
     username: {
       type: String,
@@ -56,13 +55,13 @@ const pollSchema = new mongoose.Schema({
     default: function () {
       const currentDate = new Date();
       switch (this.timer.unit) {
-        case 'minutes':
+        case "minutes":
           currentDate.setMinutes(currentDate.getMinutes() + this.timer.value);
           break;
-        case 'hours':
+        case "hours":
           currentDate.setHours(currentDate.getHours() + this.timer.value);
           break;
-        case 'days':
+        case "days":
           currentDate.setDate(currentDate.getDate() + this.timer.value);
           break;
         default:
@@ -73,6 +72,6 @@ const pollSchema = new mongoose.Schema({
   },
 });
 
-const Poll = mongoose.model('Poll', pollSchema);
+const Poll = mongoose.model("Poll", pollSchema);
 
 module.exports = Poll;
