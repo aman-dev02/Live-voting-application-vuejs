@@ -14,12 +14,15 @@ const createNotification = async (req, res) => {
 
 const getNotifications = async (req, res) => {
   try {
-    const notifications = await Notification.find();
+    const userId = req.user.id;
+    const notifications = await Notification.find({ 'poll.createdBy.id': userId });
+
     res.status(200).json(notifications);
   } catch (error) {
     console.error('Error fetching notifications:', error);
     res.status(500).json({ message: 'Error fetching notifications' });
   }
 };
+
 
 module.exports = { createNotification, getNotifications };

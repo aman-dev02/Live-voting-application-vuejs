@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const { storeNotification } = require('../controllers/notiController');
+const { storeNotification,getNotifications } = require('../controllers/notiController');
 const {verifyAccessToken} =require(  "../middlewares")
 router.use(verifyAccessToken);
-router.post('/',storeNotification);
+router.post('/notification',storeNotification);
+router.get('/notification',getNotifications);
 
 

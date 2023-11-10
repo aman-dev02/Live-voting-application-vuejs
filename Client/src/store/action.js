@@ -101,6 +101,26 @@ export const actions = {
     
     }
   },
+  async sendNotificationAction({ commit }, { username, pollId, poll, optionVoted, userId }) {
+    try {
+      await axiosInstance.post('/api/notification', { username, pollId, poll, optionVoted, userId });
+    } catch (error) {
+      console.error('Error sending notification:', error);
+      throw error;
+    }
+  },
+
+  async getNotificationsAction({ commit }) {
+    try {
+      const response = await axiosInstance.get('/api/notification');
+      const notifications = response.data;
+      commit('SET_NOTIFICATIONS', notifications);
+      return notifications;
+    } catch (error) {
+      console.error('Error fetching notifications:', error);
+      throw error;
+    }
+  },
 }
 
   

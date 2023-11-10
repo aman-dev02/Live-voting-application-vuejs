@@ -75,6 +75,7 @@ const vote = async (poll, optionIndex) => {
       })
       socket.emit('Vote', {
         username: user.username,
+        id:user.id
       })
     } catch (error) {
       console.error('Error voting:', error)
@@ -96,12 +97,11 @@ const filteredPolls = computed(() => {
   } else if (filter.value === 'expired') {
     return openPolls.value.filter((poll) => !poll.isOpen)
   }
-  return openPolls.value // Default to showing all if filter is not 'live' or 'expired'
+  return openPolls.value 
 })
 onMounted(() => {
   fetchOpenPolls()
 
-  //  socket.emit('message', 'Hello from Vue!')
 })
 </script>
 
