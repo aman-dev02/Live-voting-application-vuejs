@@ -12,6 +12,7 @@ require("dotenv").config();
 const authRoutes = require("./routes/authRoutes");
 const profileRoutes = require("./routes/profileRoutes");
 const pollRoutes = require("./routes/pollRoutes.js");
+const notifRoutes=require("./routes/notiRoutes.js")
 
 app.use(express.json());
 app.use(
@@ -61,6 +62,7 @@ mongoose.connect(mongoUrl, (err) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/profile", profileRoutes);
 app.use("/api/polls", pollRoutes);
+app.use("/api/notification", notifRoutes);
 
 const port = process.env.PORT || 8080;
 

@@ -30,7 +30,7 @@ var Poll = new mongoose.Schema({
 const notificationSchema = new mongoose.Schema({
   username: String,
   pollId: String,
-  poll: [Poll],
+  poll: Poll,
   userId: String,
   optionVoted: String,
   votedAt: { type: Date, default: Date.now },

@@ -73,9 +73,18 @@ const vote = async (poll, optionIndex) => {
       toast.success('Voted Successful', {
         position: toast.POSITION.TOP_CENTER
       })
+      // createNotification
+      await store.dispatch('sendNotificationAction', {
+        username: user.username,
+        pollId: poll._id,
+        poll: poll,
+        optionVoted: poll.options[optionIndex].text,
+        userId: user.id
+      })
+
       socket.emit('Vote', {
         username: user.username,
-        id:user.id
+        id: user.id
       })
     } catch (error) {
       console.error('Error voting:', error)
