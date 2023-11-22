@@ -102,11 +102,29 @@ const updatePoll= async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 };
+const deletePoll = async (req, res) => {
+  const { pollId } = req.params;
+
+  try {
+    const poll = await Poll.findById(pollId);
+
+    if (poll) {
+      await poll.remove();
+      res.json({ message: 'Poll deleted successfully.' });
+    } else {
+      res.status(404).json({ error: 'Poll not found.' });
+    }
+  } catch (error) {
+    console.error('Error deleting poll:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
 
 module.exports = {
   createPoll,
   recordVote,
   getOpenPolls,
   mypolls,
-  updatePoll
+  updatePoll,
+  deletePoll
 };

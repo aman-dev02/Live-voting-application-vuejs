@@ -123,6 +123,21 @@ export const actions = {
       throw error;
     }
   },
+  async deletePollAction({ commit }, pollId) {
+    try {
+      const response = await axiosInstance.delete(`/api/polls/${pollId}`);
+      
+      if (response.data.message) {
+        commit('REMOVE_POLL', pollId);
+        return response.data;
+      } else if (response.data.error) {
+        return { success: false, message: response.data.error };
+      }
+    } catch (error) {
+      console.error('Error deleting poll:', error);
+      throw error;
+    }
+  },
 }
 
   
