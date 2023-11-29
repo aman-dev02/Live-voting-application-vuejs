@@ -6,6 +6,7 @@ const cors = require("cors");
 const http = require("http"); 
 const redis = require("redis");
 const { Server } = require("socket.io"); 
+var cron = require('node-cron');
 
 require("dotenv").config();
 
@@ -21,6 +22,11 @@ app.use(
     credentials: true,
   })
 );
+
+cron.schedule('* * * * *', () => {
+  console.log('Running every minute');
+});
+   
 
 const server = http.createServer(app);
 
